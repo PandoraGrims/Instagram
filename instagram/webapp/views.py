@@ -59,3 +59,13 @@ class PostDetailView(DetailView):
     template_name = "posts/post_view.html"
 
 
+class FollowersView(LoginRequiredMixin, View):
+    def get(self, request, *args, pk, **kwargs):
+        user = get_object_or_404(get_user_model(), pk=pk)
+        if user == request.user:
+            return HttpResponseBadRequest()
+        if request.user in user.followers.all():
+            user.followers.remove(request.user)
+        else:
+            user.followers.add(request.user)
+        return redirect("accounts:profile", pk=pk)
