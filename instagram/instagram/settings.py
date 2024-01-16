@@ -108,6 +108,15 @@ USE_I18N = True
 
 USE_TZ = True
 
+AUTH_USER_MODEL = 'accounts.User'
+
+LOGIN_URL = "accounts:login"
+LOGIN_REDIRECT_URL = "webapp:posts_list"
+LOGOUT_REDIRECT_URL = "webapp:posts_list"
+
+MEDIA_ROOT = Path.joinpath(BASE_DIR, 'uploads')
+MEDIA_URL = '/media/'
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
