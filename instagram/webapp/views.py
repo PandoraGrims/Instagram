@@ -19,8 +19,8 @@ class PostsListView(ListView):
 
     def get_queryset(self):
         posts = super().get_queryset()
-        if self.request.userkill.is_authenticated:
-            posts = super().get_queryset().filter(author__in=self.request.userkill.following.all())
+        if self.request.user.is_authenticated:
+            posts = super().get_queryset().filter(author__in=self.request.user.following.all())
         return posts
 
 
@@ -29,7 +29,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
     template_name = "posts/post_create.html"
 
     def form_valid(self, form):
-        form.instance.author = self.request.userkill
+        form.instance.author = self.request.user
         return super().form_valid(form)
 
 
@@ -39,7 +39,7 @@ class PostUpdateView(PermissionRequiredMixin, UpdateView):
     template_name = "posts/post_update.html"
 
     def has_permission(self):
-        return self.request.userkill == self.get_object().author
+        return self.request.user == self.get_object().author
 
 
 class PostDeleteView(PermissionRequiredMixin, DeleteView):
@@ -47,10 +47,10 @@ class PostDeleteView(PermissionRequiredMixin, DeleteView):
     template_name = "posts/post_delete.html"
 
     def has_permission(self):
-        return self.request.userkill == self.get_object().author
+        return self.request.user == self.get_object().author
 
     def get_success_url(self):
-        return reverse("accounts:profile", kwargs={"pk": self.request.userkill.pk})
+        return reverse("accounts:profile", kwargs={"pk": self.request.user.pk})
 
 
 class PostDetailView(DetailView):
@@ -61,20 +61,20 @@ class PostDetailView(DetailView):
 class FollowersView(LoginRequiredMixin, View):
     def get(self, request, *args, pk, **kwargs):
         user = get_object_or_404(get_user_model(), pk=pk)
-        if user == request.userkill:
+        if user == request.user:
             return HttpResponseBadRequest()
         if request.userkill in user.followers.all():
-            user.followers.remove(request.userkill)
+            user.followers.remove(request.user)
         else:
-            user.followers.add(request.userkill)
+            user.followers.add(request.user)
         return redirect("accounts:profile", pk=pk)
 
 
 class LikePostView(LoginRequiredMixin, View):
     def get(self, request, *args, pk, **kwargs):
         post = get_object_or_404(Post, pk=pk)
-        if request.userkill in post.like_users.all():
-            post.like_users.remove(request.userkill)
+        if request.user in post.like_users.all():
+            post.like_users.remove(request.user)
         else:
-            post.like_users.add(request.userkill)
+            post.like_users.add(request.user)
         return HttpResponseRedirect(self.request.GET.get("next"))
