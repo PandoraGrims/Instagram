@@ -69,3 +69,13 @@ class FollowersView(LoginRequiredMixin, View):
         else:
             user.followers.add(request.user)
         return redirect("accounts:profile", pk=pk)
+
+
+class LikePostView(LoginRequiredMixin, View):
+    def get(self, request, *args, pk, **kwargs):
+        post = get_object_or_404(Post, pk=pk)
+        if request.user in post.like_users.all():
+            post.like_users.remove(request.user)
+        else:
+            post.like_users.add(request.user)
+        return HttpResponseRedirect(self.request.GET.get("next"))
