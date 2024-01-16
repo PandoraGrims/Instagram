@@ -4,12 +4,12 @@
     {% include "partial/form.html" with button_text='Поиск' method='get' %}
     <div class="row">
         {% for user in users %}
-            <a href="{% url 'accounts:profile' user.pk %}">
+            <a href="{% url 'accounts:profile' userkill.pk %}">
                 <div class="col-md-4">
                     <div class="user-card">
-                        <img class="user-avatar img-fluid" src="{{ user.avatar.url }}" alt="{{ user.avatar.filename }}">
-                        <div class="user-username">{{ user.username }}</div>
-                        <div class="user-bio">{{ user.description }}</div>
+                        <img class="user-avatar img-fluid" src="{{ userkill.avatar.url }}" alt="{{ userkill.avatar.filename }}">
+                        <div class="user-username">{{ userkill.username }}</div>
+                        <div class="user-bio">{{ userkill.description }}</div>
                     </div>
                 </div>
             </a>

@@ -24,13 +24,11 @@ class Userkill(AbstractUser):
     objects = CustomUserManager()
     groups = models.ManyToManyField(
         Group,
-        verbose_name=('groups'),
         blank=True,
         related_name='userkill_groups'
     )
     user_permissions = models.ManyToManyField(
         Permission,
-        verbose_name=('user permissions'),
         blank=True,
         related_name='userkill_user_permissions'
     )
@@ -39,6 +37,6 @@ class Userkill(AbstractUser):
         return self.user.username
 
     class Meta:
-        db_table = 'users'
+        db_table = 'userkills'
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователь'
